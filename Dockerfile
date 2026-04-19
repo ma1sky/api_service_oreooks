@@ -10,6 +10,10 @@ COPY . .
 RUN cat package.json
 
 RUN npx prisma generate
+
+RUN ls -la
+RUN cat package.json
+RUN npm run
 RUN npm run build
 
 EXPOSE 3000
