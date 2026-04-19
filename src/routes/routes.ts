@@ -1,9 +1,8 @@
 import { Router } from "express";
-import type { Response, Request } from "express";
-import { authToken } from "../controllers/auth.controller.js";
+import { auth } from "../controllers/auth.controller.js";
 
 const router = Router();
 
-router.get('auth/token', authToken);
+router.post('auth/token', auth);
 
 export default router;
