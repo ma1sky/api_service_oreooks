@@ -15,8 +15,6 @@
     "pg": "^8.20.0"
   },
   "scripts": {
-    "start": "prisma migrate deploy && node dist/app.js",
-    "build": "tsc",
-    "postinstall": "npm run build"
+    "start": "prisma migrate deploy && node dist/app.js"
   }
 }
