@@ -35,6 +35,8 @@ class AuthService {
                 throw new Error("API вернул невалидный JSON");
             }
 
+            console.log(login, password, parsed.data.token);
+
             return parsed.data.token;
 
         } catch (error) {

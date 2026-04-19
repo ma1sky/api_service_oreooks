@@ -1,24 +1,37 @@
 import type { Response, Request } from "express";
-import userService from "../db/user.repository.js";
+import { AuthRequestSchema } from "../config/schemas.js";
+import userService from "../repository/user.repository.js";
 import authService from "../services/auth.service.js";
 
 export const auth = async (req: Request, res: Response) => {
     try {
-        const { login, password, id } = req.body;
+        const parsed = AuthRequestSchema.safeParse(req.body);
 
-        if (!id) {
+        if (!parsed.success) {
+            const errors = parsed.error.flatten().fieldErrors;
+
+            if (errors.login || errors.password) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Пустой логин или пароль"
+                });
+            }
+
             return res.status(400).json({
                 success: false,
-                message: "Неверный ID пользователя"
+                message: "Неправильное тело запроса",
+                errors
             });
         }
 
-        const existingUser = await userService.getUser(id);
+        const { login, password, tg_id } = parsed.data;
+
+        const existingUser = await userService.getUser(tg_id);
 
         if (!existingUser) {
             const token = await authService.getToken(login, password);
 
-            await userService.createUser(token, id);
+            await userService.createUser(token, tg_id);
 
             return res.status(201).json({
                 success: true,
@@ -36,7 +49,7 @@ export const auth = async (req: Request, res: Response) => {
 
         return res.status(500).json({
             success: false,
-            message: error
+            message: error instanceof Error ? error.message : "Ошибка"
         });
     }
 };
