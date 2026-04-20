@@ -30,7 +30,7 @@ class AuthService {
             return parsed.data.token;
         }
         catch (error) {
-            throw new Error("Ошибка сети при запросе токена");
+            throw new Error("Ошибка сети при запросе токена" + error);
         }
     }
 }
