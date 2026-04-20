@@ -1,5 +1,5 @@
 import { AuthRequestSchema } from "../config/schemas.js";
-import userService from "../repository/user.repository.js";
+import userService from "../db/user.repository.js";
 import authService from "../services/auth.service.js";
 export const auth = async (req, res) => {
     try {
