@@ -1,5 +1,5 @@
-import prisma from "./prisma.js";
 import { Prisma } from "@prisma/client";
+import prisma from "../db/prisma.js";
 class UserService {
     async getUser(id) {
         try {

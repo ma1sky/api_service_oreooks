@@ -1,6 +1,6 @@
-import prisma from "./prisma.js";
 import type { User } from "../config/types.js";
 import { Prisma } from "@prisma/client";
+import prisma from "../db/prisma.js";
 
 class UserService {
 
