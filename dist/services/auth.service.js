@@ -3,8 +3,6 @@ import { AuthResponseSchema } from "../config/schemas.js";
 class AuthService {
     async getToken(login, password) {
         const authString = Buffer.from(`${login}:${password}`).toString("base64");
-        console.log("ORIOKS_LINK RAW =", ORIOKS_LINK);
-        console.log("FULL URL =", `${ORIOKS_LINK}/api/v1/auth`);
         const res = await fetch(`${ORIOKS_LINK}/api/v1/auth`, {
             method: "GET",
             headers: {
