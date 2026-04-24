@@ -1,6 +1,5 @@
 import TaskRepository from '../db/task.repository.js';
 import { badRequest, notFound, serverError, ok, created, parseId } from '../utils/controller.helpers.js';
-import { PassThrough } from 'node:stream';
 export const getTasksByUser = async (req, res) => {
     try {
         const tgId = Number(req.params.tgId);
@@ -63,8 +62,8 @@ export const updateTask = async (req, res) => {
         if (task.authorId !== tgId) {
             return badRequest(res, 'Нет доступа к этой задаче');
         }
-        const deleted = await TaskRepository.updateTask(id, req.body);
-        return ok(res, { task: deleted });
+        const updated = await TaskRepository.updateTask(id, req.body);
+        return ok(res, { task: updated });
     }
     catch (error) {
         return serverError(res, error);

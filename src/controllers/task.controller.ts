@@ -8,7 +8,6 @@ import {
   created,
   parseId
 } from '../utils/controller.helpers.js'
-import { PassThrough } from 'node:stream'
 
 export const getTasksByUser = async (
   req: Request<{ tgId: string }>,
@@ -96,9 +95,9 @@ export const updateTask = async (
       return badRequest(res, 'Нет доступа к этой задаче')
     }
 
-    const deleted = await TaskRepository.updateTask(id, req.body);
+    const updated = await TaskRepository.updateTask(id, req.body);
 
-    return ok(res, { task: deleted })
+    return ok(res, { task: updated })
   } catch (error) {
     return serverError(res, error)
   }
