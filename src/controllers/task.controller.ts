@@ -9,6 +9,25 @@ import {
   parseId
 } from '../utils/controller.helpers.js'
 
+export const getTasksByUser = async (
+  req: Request<{ tgId: string }>,
+  res: Response
+) => {
+  try {
+    const tgId = Number(req.params.tgId)
+
+    if (!tgId || Number.isNaN(tgId)) {
+      return badRequest(res, 'Неверный tgId')
+    }
+
+    const tasks = await TaskRepository.getTasksByAuthor(tgId)
+
+    return ok(res, { tasks })
+  } catch (error) {
+    return serverError(res, error)
+  }
+}
+
 export const createTask = async (req: Request, res: Response) => {
   try {
     const { title, description, deadline, authorId } = req.body
@@ -48,25 +67,6 @@ export const getTaskById = async (
     }
 
     return ok(res, { task })
-  } catch (error) {
-    return serverError(res, error)
-  }
-}
-
-export const getTasksByAuthor = async (
-  req: Request<{ authorId: string }>,
-  res: Response
-) => {
-  try {
-    const authorId = parseId(req.params.authorId)
-
-    if (!authorId) {
-      return badRequest(res, 'Неверный authorId')
-    }
-
-    const tasks = await TaskRepository.getTasksByAuthor(authorId)
-
-    return ok(res, { tasks })
   } catch (error) {
     return serverError(res, error)
   }

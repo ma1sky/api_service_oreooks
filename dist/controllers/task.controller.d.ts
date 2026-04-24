@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
+export declare const getTasksByUser: (req: Request<{
+    tgId: string;
+}>, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const createTask: (req: Request, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const getTaskById: (req: Request<{
     id: string;
-}>, res: Response) => Promise<Response<any, Record<string, any>>>;
-export declare const getTasksByAuthor: (req: Request<{
-    authorId: string;
 }>, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const updateTask: (req: Request<{
     id: string;

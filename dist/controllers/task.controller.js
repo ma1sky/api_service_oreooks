@@ -1,5 +1,18 @@
 import TaskRepository from '../db/task.repository.js';
 import { badRequest, notFound, serverError, ok, created, parseId } from '../utils/controller.helpers.js';
+export const getTasksByUser = async (req, res) => {
+    try {
+        const tgId = Number(req.params.tgId);
+        if (!tgId || Number.isNaN(tgId)) {
+            return badRequest(res, 'Неверный tgId');
+        }
+        const tasks = await TaskRepository.getTasksByAuthor(tgId);
+        return ok(res, { tasks });
+    }
+    catch (error) {
+        return serverError(res, error);
+    }
+};
 export const createTask = async (req, res) => {
     try {
         const { title, description, deadline, authorId } = req.body;
@@ -29,19 +42,6 @@ export const getTaskById = async (req, res) => {
             return notFound(res, 'Задача не найдена');
         }
         return ok(res, { task });
-    }
-    catch (error) {
-        return serverError(res, error);
-    }
-};
-export const getTasksByAuthor = async (req, res) => {
-    try {
-        const authorId = parseId(req.params.authorId);
-        if (!authorId) {
-            return badRequest(res, 'Неверный authorId');
-        }
-        const tasks = await TaskRepository.getTasksByAuthor(authorId);
-        return ok(res, { tasks });
     }
     catch (error) {
         return serverError(res, error);
