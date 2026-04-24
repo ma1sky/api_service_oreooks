@@ -8,6 +8,7 @@ import {
   created,
   parseId
 } from '../utils/controller.helpers.js'
+import { PassThrough } from 'node:stream'
 
 export const getTasksByUser = async (
   req: Request<{ tgId: string }>,
@@ -73,19 +74,31 @@ export const getTaskById = async (
 }
 
 export const updateTask = async (
-  req: Request<{ id: string }>,
+    req: Request<{ tgId: string; id: string }>,
   res: Response
 ) => {
   try {
+    const tgId = parseId(req.params.tgId)
     const id = parseId(req.params.id)
+	console.log(tgId, id);
 
-    if (!id) {
+    if (!id || Number.isNaN(id)) {
       return badRequest(res, 'Неверный ID задачи')
     }
 
-    const task = await TaskRepository.updateTask(id, req.body)
+    const task = await TaskRepository.getTaskById(id)
+	
+    if (!task) {
+      return notFound(res, 'Задача не найдена')
+    }
 
-    return ok(res, { task })
+    if (task.authorId !== tgId) {
+      return badRequest(res, 'Нет доступа к этой задаче')
+    }
+
+    const deleted = await TaskRepository.updateTask(id, req.body);
+
+    return ok(res, { task: deleted })
   } catch (error) {
     return serverError(res, error)
   }
