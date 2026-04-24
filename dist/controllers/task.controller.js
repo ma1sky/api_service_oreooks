@@ -62,15 +62,20 @@ export const updateTask = async (req, res) => {
 };
 export const deleteTask = async (req, res) => {
     try {
+        const tgId = parseId(req.params.tgId);
         const id = parseId(req.params.id);
-        if (!id) {
+        if (!id || Number.isNaN(id)) {
             return badRequest(res, 'Неверный ID задачи');
         }
-        const task = await TaskRepository.deleteTask(id);
+        const task = await TaskRepository.getTaskById(id);
         if (!task) {
             return notFound(res, 'Задача не найдена');
         }
-        return ok(res, { task });
+        if (task.authorId !== tgId) {
+            return badRequest(res, 'Нет доступа к этой задаче');
+        }
+        const deleted = await TaskRepository.deleteTask(id);
+        return ok(res, { task: deleted });
     }
     catch (error) {
         return serverError(res, error);

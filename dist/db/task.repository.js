@@ -41,6 +41,7 @@ class TaskRepository {
         const task = await prisma.task.findUnique({
             where: { id }
         });
+        console.log(id);
         if (!task)
             return null;
         const deleted = await prisma.task.delete({
