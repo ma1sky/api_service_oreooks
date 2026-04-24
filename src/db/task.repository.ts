@@ -57,18 +57,18 @@ class TaskRepository {
     }
 
     async deleteTask(id: number): Promise<TaskResponseDto | null> {
-    const task = await prisma.task.findUnique({
-      where: { id }
-    })
+        const task = await prisma.task.findUnique({
+        where: { id }
+        })
 
-    if (!task) return null
+        if (!task) return null
 
-    const deleted = await prisma.task.delete({
-      where: { id }
-    })
+        const deleted = await prisma.task.delete({
+        where: { id }
+        })
 
-    return toTaskDto(deleted)
-  }
+        return toTaskDto(deleted)
+    }
 }
 
 export default new TaskRepository()
