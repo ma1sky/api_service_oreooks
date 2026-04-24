@@ -5,7 +5,7 @@ declare class TaskRepository {
     getTaskById(id: number): Promise<TaskResponseDto | null>;
     getTasksByAuthor(authorId: number): Promise<TaskResponseDto[]>;
     updateTask(id: number, data: Prisma.TaskUpdateInput): Promise<TaskResponseDto>;
-    deleteTask(id: number): Promise<TaskResponseDto>;
+    deleteTask(id: number): Promise<TaskResponseDto | null>;
 }
 declare const _default: TaskRepository;
 export default _default;

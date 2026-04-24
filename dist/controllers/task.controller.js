@@ -67,6 +67,9 @@ export const deleteTask = async (req, res) => {
             return badRequest(res, 'Неверный ID задачи');
         }
         const task = await TaskRepository.deleteTask(id);
+        if (!task) {
+            return notFound(res, 'Задача не найдена');
+        }
         return ok(res, { task });
     }
     catch (error) {

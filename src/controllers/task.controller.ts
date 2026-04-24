@@ -104,6 +104,10 @@ export const deleteTask = async (
 
     const task = await TaskRepository.deleteTask(id)
 
+    if (!task) {
+      return notFound(res, 'Задача не найдена')
+    }
+
     return ok(res, { task })
   } catch (error) {
     return serverError(res, error)

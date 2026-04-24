@@ -38,10 +38,15 @@ class TaskRepository {
         return toTaskDto(task);
     }
     async deleteTask(id) {
-        const task = await prisma.task.delete({
+        const task = await prisma.task.findUnique({
             where: { id }
         });
-        return toTaskDto(task);
+        if (!task)
+            return null;
+        const deleted = await prisma.task.delete({
+            where: { id }
+        });
+        return toTaskDto(deleted);
     }
 }
 export default new TaskRepository();
