@@ -7,6 +7,7 @@ export declare const getTaskById: (req: Request<{
     id: string;
 }>, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const updateTask: (req: Request<{
+    tgId: string;
     id: string;
 }>, res: Response) => Promise<Response<any, Record<string, any>>>;
 export declare const deleteTask: (req: Request<{
