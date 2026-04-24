@@ -64,6 +64,7 @@ export const deleteTask = async (req, res) => {
     try {
         const tgId = parseId(req.params.tgId);
         const id = parseId(req.params.id);
+        console.log(tgId, id);
         if (!id || Number.isNaN(id)) {
             return badRequest(res, 'Неверный ID задачи');
         }

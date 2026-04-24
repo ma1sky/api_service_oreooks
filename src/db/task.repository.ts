@@ -65,7 +65,7 @@ class TaskRepository {
         if (!task) return null
 
         const deleted = await prisma.task.delete({
-        where: { id }
+            where: { id }
         })
 
         return toTaskDto(deleted)
