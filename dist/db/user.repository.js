@@ -1,9 +1,9 @@
 import prisma from "./prisma.js";
 import { Prisma } from "@prisma/client";
-class UserService {
+class UserRepository {
     async getUser(id) {
         try {
-            return await prisma.users.findUnique({
+            return await prisma.user.findUnique({
                 where: { tg_id: id }
             });
         }
@@ -14,7 +14,7 @@ class UserService {
     }
     async createUser(token, tg_id) {
         try {
-            return await prisma.users.create({ data: { tg_id, token } });
+            return await prisma.user.create({ data: { tg_id, token } });
         }
         catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -27,5 +27,5 @@ class UserService {
         }
     }
 }
-export default new UserService();
+export default new UserRepository();
 //# sourceMappingURL=user.repository.js.map

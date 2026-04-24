@@ -35,7 +35,7 @@ model Student {
 model Task {
     id          Int      @id @default(autoincrement())
     title       String
-    description String?
+    description String
     deadline    DateTime
     authorId    Int
     author      User     @relation(fields: [authorId], references: [tg_id])

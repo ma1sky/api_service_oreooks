@@ -2,11 +2,10 @@ import prisma from "./prisma.js";
 import type { User } from "../config/types.js";
 import { Prisma } from "@prisma/client";
 
-class UserService {
-
+class UserRepository {
     async getUser(id: number): Promise<User | null> {
         try {
-            return await prisma.users.findUnique({
+            return await prisma.user.findUnique({
                 where: { tg_id: id }
             });
         } catch (error) {
@@ -17,7 +16,7 @@ class UserService {
 
     async createUser(token: string, tg_id: number): Promise<User> {
         try {
-            return await prisma.users.create({ data: { tg_id, token } });
+            return await prisma.user.create({ data: { tg_id, token } });
 
         } catch (error) {
 
@@ -33,4 +32,4 @@ class UserService {
     }
 }
 
-export default new UserService();
+export default new UserRepository();
