@@ -1,5 +1,5 @@
-import { ORIOKS_LINK } from "../config/env.config.js";
-import { AuthResponseSchema } from "../config/schemas.js";
+import { ORIOKS_LINK } from "../config/env.config";
+import { AuthResponseSchema } from "../config/schemas";
 
 class AuthService {
     async getToken(login: string, password: string): Promise<string> {

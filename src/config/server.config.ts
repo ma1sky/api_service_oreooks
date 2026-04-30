@@ -1,6 +1,6 @@
 import express from 'express';
-import { PORT } from './env.config.js'
-import router from '../routes/routes.js';
+import { PORT } from './env.config'
+import router from '../routes/routes';
 
 export default function createApp() {
     
