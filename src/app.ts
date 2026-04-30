@@ -1,2 +1,2 @@
-import createApp from "./config/server.config.js";
+import createApp from "./config/server.config";
 createApp();

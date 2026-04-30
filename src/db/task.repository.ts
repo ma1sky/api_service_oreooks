@@ -1,6 +1,6 @@
-import prisma from './prisma.js'
+import prisma from './prisma'
 import { Prisma } from '@prisma/client'
-import type { TaskResponseDto } from '../config/types.js'
+import type { TaskResponseDto } from '../config/types'
 
 
 function toTaskDto(task: {

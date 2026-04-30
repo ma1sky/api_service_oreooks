@@ -16,6 +16,7 @@
     "zod": "^4.3.6"
   },
   "scripts": {
+    "build": "tsc",
     "start": "prisma migrate deploy && node dist/app.js"
   }
 }

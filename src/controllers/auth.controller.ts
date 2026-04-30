@@ -1,7 +1,7 @@
 import type { Response, Request } from "express";
-import { AuthRequestSchema } from "../config/schemas.js";
-import userService from "../db/user.repository.js";
-import authService from "../services/auth.service.js";
+import { AuthRequestSchema } from "../config/schemas";
+import userService from "../db/user.repository";
+import authService from "../services/auth.service";
 
 export const auth = async (req: Request, res: Response) => {
     try {

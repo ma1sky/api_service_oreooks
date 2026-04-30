@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import TaskRepository from '../db/task.repository.js'
+import TaskRepository from '../db/task.repository'
 import {
   badRequest,
   notFound,
@@ -7,7 +7,7 @@ import {
   ok,
   created,
   parseId
-} from '../utils/controller.helpers.js'
+} from '../utils/controller.helpers'
 
 export const getTasksByUser = async (
   req: Request<{ tgId: string }>,
