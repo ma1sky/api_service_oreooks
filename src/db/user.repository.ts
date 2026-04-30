@@ -5,8 +5,7 @@ import { Prisma } from "@prisma/client";
 class UserRepository {
     async getUser(id: number): Promise<User | null> {
         try {
-            return await prisma.user.findFirst({
-            });
+            return await prisma.user.findFirst();
         } catch (error) {
             console.error("Ошибка получения пользоваля: ", error);
             throw new Error("Ошибка базы данных");
