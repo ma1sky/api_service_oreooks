@@ -5,8 +5,7 @@ import { Prisma } from "@prisma/client";
 class UserRepository {
     async getUser(id: number): Promise<User | null> {
         try {
-            return await prisma.user.findUnique({
-                where: { tg_id: id }
+            return await prisma.user.findFirst({
             });
         } catch (error) {
             console.error("Ошибка получения пользоваля: ", error);
