@@ -16,12 +16,9 @@ class AuthService {
 
         const data = await res.json().catch(() => null);
 
-        if (res.status === 401) {
-            throw new Error(data?.error ?? "Неверный логин или пароль");
-        }
-
-        if (res.status === 403) {
-            throw new Error(data?.error ?? "Лимит токенов исчерпан");
+        switch (res.status) {
+            case 401: throw new Error(data?.error ?? "Неверный логин или пароль");
+            case 403: throw new Error(data?.error ?? "Лимит токенов исчерпан");
         }
 
         if (!res.ok) {
@@ -30,9 +27,7 @@ class AuthService {
 
         const parsed = AuthResponseSchema.safeParse(data);
 
-        if (!parsed.success) {
-            throw new Error("API вернул невалидный JSON");
-        }
+        if (!parsed.success) throw new Error("API вернул невалидный JSON");
 
         return parsed.data.token;
     }

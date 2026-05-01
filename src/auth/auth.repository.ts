@@ -1,4 +1,4 @@
-import prisma from "./prisma";
+import prisma from "../db/prisma";
 import type { User } from "../config/types";
 import { Prisma } from "@prisma/client";
 

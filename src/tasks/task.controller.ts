@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import TaskRepository from '../db/task.repository'
+import TaskRepository from './task.repository'
 import {
   badRequest,
   notFound,
