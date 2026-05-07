@@ -9,14 +9,14 @@ class AuthController {
 
 export const auth = async (req: Request, res: Response) => {
     try {
-        const { login, password, tg_id } = req.body;
+        const { login, password, tgId } = req.body;
 
-        const existingUser = await userService.getUser(tg_id);
+        const existingUser = await userService.getUser(tgId);
 
         if (!existingUser) {
             const token = await authService.getToken(login, password);
 
-            await userService.createUser(token, tg_id);
+            await userService.createUser(token, tgId);
 
             return res.status(201).json({
                 success: true,
