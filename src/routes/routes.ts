@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { auth } from "../auth/auth.controller";
-import { createTask, deleteTask, getTasksByUser, updateTask, toggleTaskState, getTaskById } from "../tasks/task.controller"
+import { createTask, deleteTask, getTasksByUser, updateTask, getTaskById } from "../tasks/task.controller"
 const router = Router();
 
 router.post('/auth', auth);
