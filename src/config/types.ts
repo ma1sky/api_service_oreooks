@@ -9,4 +9,5 @@ export type TaskResponseDto = {
     description: string
     deadline: Date
     authorId: number
+    state: string
 }

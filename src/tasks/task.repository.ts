@@ -9,13 +9,15 @@ function toTaskDto(task: {
     description: string
     deadline: Date
     authorId: number
+    state?: string
 }): TaskResponseDto {
     return {
         id: task.id,
         title: task.title,
         description: task.description,
         deadline: task.deadline,
-        authorId: task.authorId
+        authorId: task.authorId,
+        state: task.state || "draft"
     }
 }
 
@@ -38,7 +40,15 @@ class TaskRepository {
     async getTasksByTgId(tgId: number): Promise<TaskResponseDto[]> {
         const tasks = await prisma.task.findMany({
             where: { authorId: tgId },
-            orderBy: { deadline: 'asc' }
+            orderBy: { deadline: 'asc' },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                deadline: true,
+                authorId: true,
+                state: true //it exists in the database and default value is 'draft'
+            }
         })
 
         return tasks.map(toTaskDto)
