@@ -50,17 +50,19 @@ export const createTask = async (req: Request, res: Response) => {
 }
 
 export const getTaskById = async (
-	req: Request<{ id: string }>,
+	req: Request<{ tgId: string; id: string }>,
 	res: Response
 ) => {
 	try {
+		const tgId = parseId(req.params.tgId)
 		const id = parseId(req.params.id)
 
-		if (!id) {
-			return badRequest(res, 'Неверный ID задачи')
+		if (!tgId || !id) {
+			return badRequest(res, 'Неверные параметры запроса')
 		}
 
-		const task = await TaskRepository.getTaskById(id)
+		const userTasks = await TaskRepository.getTasksByTgId(tgId)
+		const task = userTasks.find(t => t.id === id)
 
 		if (!task) {
 			return notFound(res, 'Задача не найдена')
