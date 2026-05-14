@@ -9,6 +9,7 @@ datasource db {
 model User {
     tg_id    Int      @id
     token    String
+    state    String
     tasks    Task[]
     students Student?
     schedules Schedule[]
@@ -39,6 +40,7 @@ model Task {
     description String
     deadline    DateTime
     authorId    Int
+    status      String @default("inProgress")
     author      User     @relation(fields: [authorId], references: [tg_id])
 
     @@map("tasks")

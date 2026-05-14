@@ -35,9 +35,9 @@ class TaskRepository {
         return toTaskDto(task)
     }
 
-    async getTasksByAuthor(authorId: number): Promise<TaskResponseDto[]> {
+    async getTasksByTgId(tgId: number): Promise<TaskResponseDto[]> {
         const tasks = await prisma.task.findMany({
-            where: { authorId },
+            where: { authorId: tgId },
             orderBy: { deadline: 'asc' }
         })
 

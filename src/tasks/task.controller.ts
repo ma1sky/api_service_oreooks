@@ -20,7 +20,7 @@ export const getTasksByUser = async (
       return badRequest(res, 'Неверный tgId')
     }
 
-    const tasks = await TaskRepository.getTasksByAuthor(tgId)
+    const tasks = await TaskRepository.getTasksByTgId(tgId)
 
     return ok(res, { tasks })
   } catch (error) {
