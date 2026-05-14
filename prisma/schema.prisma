@@ -39,7 +39,7 @@ model Task {
     description String
     deadline    DateTime
     authorId    Int
-    status      String @default("inProgress")
+    status      String   @default("draft")
     author      User     @relation(fields: [authorId], references: [tg_id])
 
     @@map("tasks")
