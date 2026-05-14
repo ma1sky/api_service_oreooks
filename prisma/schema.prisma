@@ -9,7 +9,6 @@ datasource db {
 model User {
     tg_id    Int      @id
     token    String
-    state    String
     tasks    Task[]
     students Student?
     schedules Schedule[]
