@@ -20,7 +20,13 @@ export const getScheduleByDate = async (req: Request, res: Response) => {
       return res.status(500).json({ message: "Worker service configuration missing" });
     }
     
-    const workerUrl = `${WORKER_LINK}/users/${tgId}/schedule/${date}`;
+    let workerBase = WORKER_LINK.trim();
+    if (!workerBase.startsWith('http://') && !workerBase.startsWith('https://')) {
+      workerBase = `http://${workerBase}`;
+      console.warn(`WORKER_LINK missing protocol, defaulting to: ${workerBase}`);
+    }
+    
+    const workerUrl = `${workerBase}/users/${tgId}/schedule/${date}`;
     console.log(`Proxying schedule request to: ${workerUrl}`);
     
     const response = await fetch(workerUrl, {
