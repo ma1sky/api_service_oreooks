@@ -26,7 +26,7 @@ export const getScheduleByDate = async (req: Request, res: Response) => {
       console.warn(`WORKER_LINK missing protocol, defaulting to: ${workerBase}`);
     }
     
-    const workerUrl = `${workerBase}/users/${tgId}/schedule/${date}`;
+    const workerUrl = `${workerBase}/api/users/${tgId}/schedule/${date}`;
     console.log(`Proxying schedule request to: ${workerUrl}`);
     
     const response = await fetch(workerUrl, {
