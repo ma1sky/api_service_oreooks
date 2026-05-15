@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { WORKER_LINK } from '../config/env.config';
+import { getScheduleByDate as getScheduleFromDb, scheduleExists } from './schedule.repository';
 
 export const getScheduleByDate = async (req: Request, res: Response) => {
   try {
@@ -14,7 +15,24 @@ export const getScheduleByDate = async (req: Request, res: Response) => {
     if (isNaN(tgIdNum)) {
       return res.status(400).json({ message: "Некорректный tgId" });
     }
-    
+
+    // Parse date string (expected format YYYY-MM-DD)
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+      return res.status(400).json({ message: "Некорректный формат даты" });
+    }
+
+    // First, check if schedule exists in database for this user
+    const exists = await scheduleExists(tgIdNum);
+    if (exists) {
+      const schedule = await getScheduleFromDb(tgIdNum, parsedDate);
+      if (schedule) {
+        return res.json(schedule);
+      }
+      // If schedule exists but not for this specific date, we can still fall back to worker
+    }
+
+    // If no schedule in DB, proxy to worker service
     if (!WORKER_LINK) {
       console.error('WORKER_LINK is not defined');
       return res.status(500).json({ message: "Worker service configuration missing" });
@@ -47,8 +65,7 @@ export const getScheduleByDate = async (req: Request, res: Response) => {
     const data = await response.json();
     return res.json(data);
   } catch (error) {
-    console.error('Error proxying schedule request:', error);
-    // Возвращаем более детальное сообщение для отладки
+    console.error('Error processing schedule request:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     return res.status(500).json({
       message: "Internal server error",

@@ -2,8 +2,11 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/pg": "^8.20.0",
+    "jest": "^30.4.2",
     "prisma": "^7.7.0",
+    "ts-jest": "^29.4.9",
     "typescript": "^6.0.2"
   },
   "dependencies": {
@@ -17,6 +20,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "prisma migrate deploy && node dist/app.js"
+    "start": "prisma migrate deploy && node dist/app.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   }
 }

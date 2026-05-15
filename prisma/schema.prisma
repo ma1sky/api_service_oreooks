@@ -48,6 +48,7 @@ model Task {
 
 model Group {
   id        Int        @id @default(autoincrement())
+  orioksId  Int?       @unique
   name      String     @unique
   schedules Schedule[]
   students  Student[]
