@@ -8,10 +8,6 @@ describe("ORIOKS API Integration extended tests", () => {
     return;
   }
 
-  // =========================
-  // AUTH VALIDATION
-  // =========================
-
   it("should not return empty student fields", async () => {
     const result = await orioksApiService.getStudent(TOKEN);
 
