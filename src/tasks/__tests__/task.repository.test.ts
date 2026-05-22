@@ -1,7 +1,7 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import prisma from '../../db/prisma';
 import TaskRepository from '../task.repository';
-import { Prisma } from '@prisma/client';
+import { Prisma, TaskState } from '@prisma/client';
 import type { TaskResponseDto } from '../../config/types';
 
 // Mock the prisma module
@@ -32,7 +32,7 @@ describe('TaskRepository', () => {
         description: 'Test Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
       };
 
       const mockCreatedTask = {
@@ -41,7 +41,9 @@ describe('TaskRepository', () => {
         description: 'Test Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.task.create.mockResolvedValue(mockCreatedTask);
@@ -57,7 +59,7 @@ describe('TaskRepository', () => {
         description: 'Test Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
       });
     });
   });
@@ -70,7 +72,9 @@ describe('TaskRepository', () => {
         description: 'Test Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.task.findUnique.mockResolvedValue(mockTask);
@@ -80,7 +84,14 @@ describe('TaskRepository', () => {
       expect(mockedPrisma.task.findUnique).toHaveBeenCalledWith({
         where: { id: 1 },
       });
-      expect(result).toEqual(mockTask);
+      expect(result).toEqual({
+        id: 1,
+        title: 'Test Task',
+        description: 'Test Description',
+        deadline: new Date('2025-01-01'),
+        authorId: 123,
+        state: TaskState.draft,
+      });
     });
 
     it('should return null when task not found', async () => {
@@ -104,7 +115,9 @@ describe('TaskRepository', () => {
           description: 'Desc 1',
           deadline: new Date('2025-01-01'),
           authorId: 123,
-          state: 'draft',
+          state: TaskState.draft,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         {
           id: 2,
@@ -112,7 +125,9 @@ describe('TaskRepository', () => {
           description: 'Desc 2',
           deadline: new Date('2025-01-02'),
           authorId: 123,
-          state: 'published',
+          state: TaskState.completed,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       ];
 
@@ -132,7 +147,24 @@ describe('TaskRepository', () => {
           state: true,
         },
       });
-      expect(result).toEqual(mockTasks);
+      expect(result).toEqual([
+        {
+          id: 1,
+          title: 'Task 1',
+          description: 'Desc 1',
+          deadline: new Date('2025-01-01'),
+          authorId: 123,
+          state: TaskState.draft,
+        },
+        {
+          id: 2,
+          title: 'Task 2',
+          description: 'Desc 2',
+          deadline: new Date('2025-01-02'),
+          authorId: 123,
+          state: TaskState.completed,
+        },
+      ]);
     });
 
     it('should return empty array when no tasks', async () => {
@@ -157,7 +189,9 @@ describe('TaskRepository', () => {
         description: 'Updated Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.task.update.mockResolvedValue(mockUpdatedTask);
@@ -168,7 +202,14 @@ describe('TaskRepository', () => {
         where: { id: 1 },
         data: updateData,
       });
-      expect(result).toEqual(mockUpdatedTask);
+      expect(result).toEqual({
+        id: 1,
+        title: 'Updated Title',
+        description: 'Updated Description',
+        deadline: new Date('2025-01-01'),
+        authorId: 123,
+        state: TaskState.draft,
+      });
     });
   });
 
@@ -180,7 +221,9 @@ describe('TaskRepository', () => {
         description: 'Description',
         deadline: new Date('2025-01-01'),
         authorId: 123,
-        state: 'draft',
+        state: TaskState.draft,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.task.findUnique.mockResolvedValue(mockTask);
@@ -194,7 +237,14 @@ describe('TaskRepository', () => {
       expect(mockedPrisma.task.delete).toHaveBeenCalledWith({
         where: { id: 1 },
       });
-      expect(result).toEqual(mockTask);
+      expect(result).toEqual({
+        id: 1,
+        title: 'Task to delete',
+        description: 'Description',
+        deadline: new Date('2025-01-01'),
+        authorId: 123,
+        state: TaskState.draft,
+      });
     });
 
     it('should return null when task not found', async () => {

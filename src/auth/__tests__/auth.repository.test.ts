@@ -25,8 +25,10 @@ describe('UserRepository', () => {
   describe('getUser', () => {
     it('should return user when found', async () => {
       const mockUser: User = {
-        tg_id: 123,
+        tgId: 123,
         token: 'some-token',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.user.findUnique.mockResolvedValue(mockUser);
@@ -34,7 +36,7 @@ describe('UserRepository', () => {
       const result = await UserRepository.getUser(123);
 
       expect(mockedPrisma.user.findUnique).toHaveBeenCalledWith({
-        where: { tg_id: 123 },
+        where: { tgId: 123 },
       });
       expect(result).toEqual(mockUser);
     });
@@ -45,7 +47,7 @@ describe('UserRepository', () => {
       const result = await UserRepository.getUser(999);
 
       expect(mockedPrisma.user.findUnique).toHaveBeenCalledWith({
-        where: { tg_id: 999 },
+        where: { tgId: 999 },
       });
       expect(result).toBeNull();
     });
@@ -63,8 +65,10 @@ describe('UserRepository', () => {
   describe('createUser', () => {
     it('should create user and return user object', async () => {
       const mockUser: User = {
-        tg_id: 123,
+        tgId: 123,
         token: 'new-token',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       mockedPrisma.user.create.mockResolvedValue(mockUser);
@@ -72,7 +76,7 @@ describe('UserRepository', () => {
       const result = await UserRepository.createUser('new-token', 123);
 
       expect(mockedPrisma.user.create).toHaveBeenCalledWith({
-        data: { tg_id: 123, token: 'new-token' },
+        data: { tgId: 123, token: 'new-token' },
       });
       expect(result).toEqual(mockUser);
     });

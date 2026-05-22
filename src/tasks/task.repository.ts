@@ -7,7 +7,7 @@ function toTaskDto(task: {
     id: number
     title: string
     description: string
-    deadline: Date
+    deadline: Date | null
     authorId: number
     state?: string
 }): TaskResponseDto {

@@ -6,7 +6,7 @@ class UserRepository {
     async getUser(id: number): Promise<User | null> {
         try {
             return await prisma.user.findUnique({
-                where: { tg_id: id }
+                where: { tgId: id }
             });
         } catch (error) {
             console.error("Ошибка получения пользоваля: ", error);
@@ -14,9 +14,9 @@ class UserRepository {
         }
     }
 
-    async createUser(token: string, tg_id: number): Promise<User> {
+    async createUser(token: string, tgId: number): Promise<User> {
         try {
-            return await prisma.user.create({ data: { tg_id, token } });
+            return await prisma.user.create({ data: { tgId, token } });
 
         } catch (error) {
 
