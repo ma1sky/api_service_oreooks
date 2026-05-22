@@ -1,0 +1,30 @@
+# Ignore coverage reports
+coverage/
+coverage/**/*
+
+# Ignore node_modules
+node_modules/
+
+# Ignore generated files
+dist/
+build/
+
+# Ignore other services (they have their own Prettier config)
+../bot_service/
+../worker_service/
+
+# Ignore lock files
+package-lock.json
+
+# Ignore HTML files (coverage reports)
+*.html
+
+# Ignore CI/CD configs
+.github/
+
+# Ignore Prisma generated
+prisma/migrations/
+
+# Ignore environment files
+.env
+.env.*

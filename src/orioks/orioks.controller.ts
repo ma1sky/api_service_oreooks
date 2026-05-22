@@ -3,7 +3,12 @@ import orioksApi from "./orioks.service";
 import * as repo from "./orioks.repository";
 import prisma from "../db/prisma";
 import userRepository from "../auth/auth.repository";
-import { ok, badRequest, notFound, serverError } from "../utils/controller.helpers";
+import {
+  ok,
+  badRequest,
+  notFound,
+  serverError,
+} from "../utils/controller.helpers";
 
 /**
  * =========================
@@ -57,10 +62,10 @@ export const getScheduleByDate = async (
       try {
         const studentData = await orioksApi.getStudent(user.token);
         await repo.saveStudent(tgId, studentData);
-        
+
         // Fetch groups to find matching group
         const groups = await orioksApi.getGroups(user.token);
-        const group = groups.find(g => g.name === studentData.group);
+        const group = groups.find((g) => g.name === studentData.group);
         if (group) {
           // Save group if not exists
           const savedGroup = await prisma.group.upsert({
@@ -69,7 +74,7 @@ export const getScheduleByDate = async (
             create: { orioksId: group.id, name: group.name },
           });
           groupId = savedGroup.id;
-          
+
           // Update student with groupId
           await prisma.student.update({
             where: { userId: tgId },
@@ -78,7 +83,9 @@ export const getScheduleByDate = async (
         }
       } catch (apiError) {
         console.error("Failed to fetch student/group data:", apiError);
-        return res.status(503).json({ message: "Не удалось получить данные группы" });
+        return res
+          .status(503)
+          .json({ message: "Не удалось получить данные группы" });
       }
     }
 
@@ -92,9 +99,15 @@ export const getScheduleByDate = async (
     // 4. если пусто → идём в ORIOKS
     if (!schedule || schedule.length === 0) {
       try {
-        const groupSchedule = await orioksApi.getGroupSchedule(user.token, groupId);
+        const groupSchedule = await orioksApi.getGroupSchedule(
+          user.token,
+          groupId,
+        );
         // TODO: Implement saveSchedule function
-        console.log("Fetched schedule from API, but save not implemented", groupSchedule);
+        console.log(
+          "Fetched schedule from API, but save not implemented",
+          groupSchedule,
+        );
         // For now, return empty schedule
         schedule = [];
       } catch (apiError) {
@@ -139,7 +152,7 @@ export const getEventsByDate = async (
     });
 
     let studentId: number | null = student?.id || null;
-    
+
     if (!studentId) {
       // If no student record, fetch student data from API and save
       try {
@@ -169,10 +182,13 @@ export const getEventsByDate = async (
         // Fetch disciplines
         const disciplines = await orioksApi.getDisciplines(user.token);
         await repo.saveDisciplines(studentId, disciplines);
-        
+
         // Fetch events for each discipline
         for (const discipline of disciplines) {
-          const disciplineEvents = await orioksApi.getDisciplineEvents(user.token, discipline.id);
+          const disciplineEvents = await orioksApi.getDisciplineEvents(
+            user.token,
+            discipline.id,
+          );
           // Find discipline ID in DB
           const dbDiscipline = await prisma.discipline.findFirst({
             where: { orioksId: discipline.id, studentId },
@@ -181,7 +197,7 @@ export const getEventsByDate = async (
             await repo.saveEvents(dbDiscipline.id, disciplineEvents);
           }
         }
-        
+
         // Refetch events from DB
         events = await repo.getEventsByDate(date, studentId);
       } catch (apiError) {

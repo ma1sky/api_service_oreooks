@@ -1,11 +1,11 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import prisma from '../../db/prisma';
-import UserRepository from '../auth.repository';
-import { Prisma } from '@prisma/client';
-import type { User } from '../../config/types';
+import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import prisma from "../../db/prisma";
+import UserRepository from "../auth.repository";
+import { Prisma } from "@prisma/client";
+import type { User } from "../../config/types";
 
 // Mock the prisma module
-jest.mock('../../db/prisma', () => ({
+jest.mock("../../db/prisma", () => ({
   __esModule: true,
   default: {
     user: {
@@ -17,16 +17,16 @@ jest.mock('../../db/prisma', () => ({
 
 const mockedPrisma = prisma as jest.Mocked<typeof prisma>;
 
-describe('UserRepository', () => {
+describe("UserRepository", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getUser', () => {
-    it('should return user when found', async () => {
+  describe("getUser", () => {
+    it("should return user when found", async () => {
       const mockUser: User = {
         tgId: 123,
-        token: 'some-token',
+        token: "some-token",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -41,7 +41,7 @@ describe('UserRepository', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('should return null when user not found', async () => {
+    it("should return null when user not found", async () => {
       mockedPrisma.user.findUnique.mockResolvedValue(null);
 
       const result = await UserRepository.getUser(999);
@@ -52,57 +52,57 @@ describe('UserRepository', () => {
       expect(result).toBeNull();
     });
 
-    it('should throw database error on prisma error', async () => {
-      const error = new Error('DB connection failed');
+    it("should throw database error on prisma error", async () => {
+      const error = new Error("DB connection failed");
       mockedPrisma.user.findUnique.mockRejectedValue(error);
 
       await expect(UserRepository.getUser(123)).rejects.toThrow(
-        'Ошибка базы данных'
+        "Ошибка базы данных",
       );
     });
   });
 
-  describe('createUser', () => {
-    it('should create user and return user object', async () => {
+  describe("createUser", () => {
+    it("should create user and return user object", async () => {
       const mockUser: User = {
         tgId: 123,
-        token: 'new-token',
+        token: "new-token",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
       mockedPrisma.user.create.mockResolvedValue(mockUser);
 
-      const result = await UserRepository.createUser('new-token', 123);
+      const result = await UserRepository.createUser("new-token", 123);
 
       expect(mockedPrisma.user.create).toHaveBeenCalledWith({
-        data: { tgId: 123, token: 'new-token' },
+        data: { tgId: 123, token: "new-token" },
       });
       expect(result).toEqual(mockUser);
     });
 
     it('should throw "Пользователь уже существует" on P2002 error', async () => {
       const prismaError = new Prisma.PrismaClientKnownRequestError(
-        'Unique constraint failed',
+        "Unique constraint failed",
         {
-          code: 'P2002',
-          clientVersion: '7.7.0',
-        } as any
+          code: "P2002",
+          clientVersion: "7.7.0",
+        } as any,
       );
 
       mockedPrisma.user.create.mockRejectedValue(prismaError);
 
-      await expect(UserRepository.createUser('token', 123)).rejects.toThrow(
-        'Пользователь уже существует'
+      await expect(UserRepository.createUser("token", 123)).rejects.toThrow(
+        "Пользователь уже существует",
       );
     });
 
     it('should throw "Ошибка базы данных" on other errors', async () => {
-      const error = new Error('Some other error');
+      const error = new Error("Some other error");
       mockedPrisma.user.create.mockRejectedValue(error);
 
-      await expect(UserRepository.createUser('token', 123)).rejects.toThrow(
-        'Ошибка базы данных'
+      await expect(UserRepository.createUser("token", 123)).rejects.toThrow(
+        "Ошибка базы данных",
       );
     });
   });

@@ -3,33 +3,32 @@ import userService from "./auth.repository";
 import authService from "./auth.service";
 
 export const auth = async (req: Request, res: Response) => {
-    try {
-        const { login, password, tgId } = req.body;
+  try {
+    const { login, password, tgId } = req.body;
 
-        const existingUser = await userService.getUser(tgId);
+    const existingUser = await userService.getUser(tgId);
 
-        if (!existingUser) {
-            const token = await authService.getToken(login, password);
+    if (!existingUser) {
+      const token = await authService.getToken(login, password);
 
-            await userService.createUser(token, tgId);
+      await userService.createUser(token, tgId);
 
-            return res.status(201).json({
-                success: true,
-                token
-            });
-        }
-
-        return res.status(200).json({
-            success: true,
-            message: "Пользователь уже существует"
-        });
-
-    } catch (error) {
-        console.error(error);
-
-        return res.status(500).json({
-            success: false,
-            message: error instanceof Error ? error.message : "Ошибка"
-        });
+      return res.status(201).json({
+        success: true,
+        token,
+      });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Пользователь уже существует",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Ошибка",
+    });
+  }
 };

@@ -1,10 +1,10 @@
-import { describe, it, expect, jest, beforeEach } from '@jest/globals';
-import prisma from '../../db/prisma';
-import TaskRepository from '../task.repository';
-import { Prisma, TaskState } from '@prisma/client';
+import { describe, it, expect, jest, beforeEach } from "@jest/globals";
+import prisma from "../../db/prisma";
+import TaskRepository from "../task.repository";
+import { Prisma, TaskState } from "@prisma/client";
 
 // Mock the prisma module
-jest.mock('../../db/prisma', () => ({
+jest.mock("../../db/prisma", () => ({
   __esModule: true,
   default: {
     task: {
@@ -19,26 +19,26 @@ jest.mock('../../db/prisma', () => ({
 
 const mockedPrisma = prisma as jest.Mocked<typeof prisma>;
 
-describe('TaskRepository', () => {
+describe("TaskRepository", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('createTask', () => {
-    it('should create a task and return TaskResponseDto', async () => {
+  describe("createTask", () => {
+    it("should create a task and return TaskResponseDto", async () => {
       const mockTaskInput: Prisma.TaskUncheckedCreateInput = {
-        title: 'Test Task',
-        description: 'Test Description',
-        deadline: new Date('2025-01-01'),
+        title: "Test Task",
+        description: "Test Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
       };
 
       const mockCreatedTask = {
         id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        deadline: new Date('2025-01-01'),
+        title: "Test Task",
+        description: "Test Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
         createdAt: new Date(),
@@ -54,22 +54,22 @@ describe('TaskRepository', () => {
       });
       expect(result).toEqual({
         id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        deadline: new Date('2025-01-01'),
+        title: "Test Task",
+        description: "Test Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
       });
     });
   });
 
-  describe('getTaskById', () => {
-    it('should return task when found', async () => {
+  describe("getTaskById", () => {
+    it("should return task when found", async () => {
       const mockTask = {
         id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        deadline: new Date('2025-01-01'),
+        title: "Test Task",
+        description: "Test Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
         createdAt: new Date(),
@@ -85,15 +85,15 @@ describe('TaskRepository', () => {
       });
       expect(result).toEqual({
         id: 1,
-        title: 'Test Task',
-        description: 'Test Description',
-        deadline: new Date('2025-01-01'),
+        title: "Test Task",
+        description: "Test Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
       });
     });
 
-    it('should return null when task not found', async () => {
+    it("should return null when task not found", async () => {
       mockedPrisma.task.findUnique.mockResolvedValue(null);
 
       const result = await TaskRepository.getTaskById(999);
@@ -105,14 +105,14 @@ describe('TaskRepository', () => {
     });
   });
 
-  describe('getTasksByTgId', () => {
-    it('should return tasks for given authorId', async () => {
+  describe("getTasksByTgId", () => {
+    it("should return tasks for given authorId", async () => {
       const mockTasks = [
         {
           id: 1,
-          title: 'Task 1',
-          description: 'Desc 1',
-          deadline: new Date('2025-01-01'),
+          title: "Task 1",
+          description: "Desc 1",
+          deadline: new Date("2025-01-01"),
           authorId: 123,
           state: TaskState.draft,
           createdAt: new Date(),
@@ -120,9 +120,9 @@ describe('TaskRepository', () => {
         },
         {
           id: 2,
-          title: 'Task 2',
-          description: 'Desc 2',
-          deadline: new Date('2025-01-02'),
+          title: "Task 2",
+          description: "Desc 2",
+          deadline: new Date("2025-01-02"),
           authorId: 123,
           state: TaskState.completed,
           createdAt: new Date(),
@@ -136,7 +136,7 @@ describe('TaskRepository', () => {
 
       expect(mockedPrisma.task.findMany).toHaveBeenCalledWith({
         where: { authorId: 123 },
-        orderBy: { deadline: 'asc' },
+        orderBy: { deadline: "asc" },
         select: {
           id: true,
           title: true,
@@ -149,24 +149,24 @@ describe('TaskRepository', () => {
       expect(result).toEqual([
         {
           id: 1,
-          title: 'Task 1',
-          description: 'Desc 1',
-          deadline: new Date('2025-01-01'),
+          title: "Task 1",
+          description: "Desc 1",
+          deadline: new Date("2025-01-01"),
           authorId: 123,
           state: TaskState.draft,
         },
         {
           id: 2,
-          title: 'Task 2',
-          description: 'Desc 2',
-          deadline: new Date('2025-01-02'),
+          title: "Task 2",
+          description: "Desc 2",
+          deadline: new Date("2025-01-02"),
           authorId: 123,
           state: TaskState.completed,
         },
       ]);
     });
 
-    it('should return empty array when no tasks', async () => {
+    it("should return empty array when no tasks", async () => {
       mockedPrisma.task.findMany.mockResolvedValue([]);
 
       const result = await TaskRepository.getTasksByTgId(456);
@@ -175,18 +175,18 @@ describe('TaskRepository', () => {
     });
   });
 
-  describe('updateTask', () => {
-    it('should update task and return updated TaskResponseDto', async () => {
+  describe("updateTask", () => {
+    it("should update task and return updated TaskResponseDto", async () => {
       const updateData: Prisma.TaskUpdateInput = {
-        title: 'Updated Title',
-        description: 'Updated Description',
+        title: "Updated Title",
+        description: "Updated Description",
       };
 
       const mockUpdatedTask = {
         id: 1,
-        title: 'Updated Title',
-        description: 'Updated Description',
-        deadline: new Date('2025-01-01'),
+        title: "Updated Title",
+        description: "Updated Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
         createdAt: new Date(),
@@ -203,22 +203,22 @@ describe('TaskRepository', () => {
       });
       expect(result).toEqual({
         id: 1,
-        title: 'Updated Title',
-        description: 'Updated Description',
-        deadline: new Date('2025-01-01'),
+        title: "Updated Title",
+        description: "Updated Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
       });
     });
   });
 
-  describe('deleteTask', () => {
-    it('should delete task and return deleted TaskResponseDto', async () => {
+  describe("deleteTask", () => {
+    it("should delete task and return deleted TaskResponseDto", async () => {
       const mockTask = {
         id: 1,
-        title: 'Task to delete',
-        description: 'Description',
-        deadline: new Date('2025-01-01'),
+        title: "Task to delete",
+        description: "Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
         createdAt: new Date(),
@@ -238,15 +238,15 @@ describe('TaskRepository', () => {
       });
       expect(result).toEqual({
         id: 1,
-        title: 'Task to delete',
-        description: 'Description',
-        deadline: new Date('2025-01-01'),
+        title: "Task to delete",
+        description: "Description",
+        deadline: new Date("2025-01-01"),
         authorId: 123,
         state: TaskState.draft,
       });
     });
 
-    it('should return null when task not found', async () => {
+    it("should return null when task not found", async () => {
       mockedPrisma.task.findUnique.mockResolvedValue(null);
 
       const result = await TaskRepository.deleteTask(999);

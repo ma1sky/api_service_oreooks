@@ -66,8 +66,7 @@ export const validateTimetable = (data: unknown) =>
  * =========================
  */
 
-export const validateGroup = (data: unknown) =>
-  safeParse(GroupSchema, data);
+export const validateGroup = (data: unknown) => safeParse(GroupSchema, data);
 
 export const validateGroups = (data: unknown) =>
   safeParse(z.array(GroupSchema), data);
@@ -99,8 +98,7 @@ export const validateDisciplines = (data: unknown) =>
  * =========================
  */
 
-export const validateEvent = (data: unknown) =>
-  safeParse(EventSchema, data);
+export const validateEvent = (data: unknown) => safeParse(EventSchema, data);
 
 export const validateEvents = (data: unknown) =>
   safeParse(z.array(EventSchema), data);
@@ -111,8 +109,7 @@ export const validateEvents = (data: unknown) =>
  * =========================
  */
 
-export const validateLesson = (data: unknown) =>
-  safeParse(LessonSchema, data);
+export const validateLesson = (data: unknown) => safeParse(LessonSchema, data);
 
 export const validateLessons = (data: unknown) =>
   safeParse(z.array(LessonSchema), data);

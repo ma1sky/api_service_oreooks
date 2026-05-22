@@ -18,7 +18,7 @@ export default defineConfig([
     },
   },
 
-  ...tseslint.configs.recommended.map(config => ({
+  ...tseslint.configs.recommended.map((config) => ({
     ...config,
     rules: {
       ...config.rules,

@@ -27,7 +27,7 @@
   "scripts": {
     "build": "tsc",
     "start": "prisma migrate deploy && node dist/app.js",
-		"lint": "eslint .",
+    "lint": "eslint .",
     "format": "prettier . --write",
     "test": "jest",
     "test:watch": "jest --watch",
