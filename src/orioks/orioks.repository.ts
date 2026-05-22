@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../db/prisma";
 import {
   validateStudent,
   validateSemesterInfo,
@@ -6,8 +6,6 @@ import {
   validateDisciplines,
   validateEvents,
 } from "../db/zod.validators";
-
-const prisma = new PrismaClient();
 
 /**
  * =========================
