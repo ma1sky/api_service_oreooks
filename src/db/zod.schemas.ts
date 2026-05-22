@@ -24,8 +24,6 @@ export const DaySchema = z.enum([
  * =========================
  */
 
-const emptyToNull = <T extends z.ZodTypeAny>(schema: T) =>
-  z.preprocess((v) => (v === "" ? null : v), schema);
 
 const dateFromString = z.preprocess((v) => {
   if (!v || v === "") return null;

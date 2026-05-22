@@ -1,5 +1,4 @@
 import type { Response, Request } from "express";
-import { AuthRequestSchema } from "../config/schemas";
 import userService from "./auth.repository";
 import authService from "./auth.service";
 

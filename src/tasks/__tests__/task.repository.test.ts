@@ -2,7 +2,6 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import prisma from '../../db/prisma';
 import TaskRepository from '../task.repository';
 import { Prisma, TaskState } from '@prisma/client';
-import type { TaskResponseDto } from '../../config/types';
 
 // Mock the prisma module
 jest.mock('../../db/prisma', () => ({

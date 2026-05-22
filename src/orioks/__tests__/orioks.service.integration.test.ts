@@ -1,12 +1,5 @@
 import orioksApiService from "../orioks.service";
 
-function safeDate(value: string) {
-	const date = new Date(value);
-	if (Number.isNaN(date.getTime())) {
-		throw new Error(`Invalid date: ${value}`);
-	}
-	return date.getTime();
-}
 
 describe("ORIOKS API Integration extended tests", () => {
 	const TOKEN = process.env.TEST_TOKEN!;
