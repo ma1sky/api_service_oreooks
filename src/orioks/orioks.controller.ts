@@ -3,6 +3,7 @@ import orioksApi from "./orioks.service";
 import * as repo from "./orioks.repository";
 import prisma from "../db/prisma";
 import userRepository from "../auth/auth.repository";
+import { ok, badRequest, notFound, serverError } from "../utils/controller.helpers";
 
 /**
  * =========================
@@ -98,14 +99,14 @@ export const getScheduleByDate = async (
         schedule = [];
       } catch (apiError) {
         console.error("Failed to fetch schedule from API:", apiError);
-        return res.status(503).json({ message: "Не удалось получить расписание" });
+        return serverError(res, "Не удалось получить расписание");
       }
     }
 
-    return res.status(200).json({ schedule });
+    return ok(res, { schedule });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error", error });
+    return serverError(res, error);
   }
 };
 
@@ -123,13 +124,13 @@ export const getEventsByDate = async (
     const date = new Date(req.params.date);
 
     if (isNaN(tgId) || isNaN(date.getTime())) {
-      return res.status(400).json({ message: "Неверные параметры запроса" });
+      return badRequest(res, "Неверные параметры запроса");
     }
 
     // 1. Get user token
     const user = await userRepository.getUser(tgId);
     if (!user) {
-      return res.status(404).json({ message: "Пользователь не найден" });
+      return notFound(res, "Пользователь не найден");
     }
 
     // 2. Get student to find studentId (primary key of Student model)
@@ -151,12 +152,12 @@ export const getEventsByDate = async (
         studentId = updatedStudent?.id || null;
       } catch (apiError) {
         console.error("Failed to fetch student data:", apiError);
-        return res.status(503).json({ message: "Не удалось получить данные студента" });
+        return serverError(res, "Не удалось получить данные студента");
       }
     }
 
     if (!studentId) {
-      return res.status(404).json({ message: "Студент не найден" });
+      return notFound(res, "Студент не найден");
     }
 
     // 3. пробуем БД
@@ -185,13 +186,13 @@ export const getEventsByDate = async (
         events = await repo.getEventsByDate(date, studentId);
       } catch (apiError) {
         console.error("Failed to fetch events from API:", apiError);
-        return res.status(503).json({ message: "Не удалось получить события" });
+        return serverError(res, "Не удалось получить события");
       }
     }
 
-    return res.status(200).json({ events });
+    return ok(res, { events });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal server error", error });
+    return serverError(res, error);
   }
 };
