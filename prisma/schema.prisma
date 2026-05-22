@@ -7,89 +7,228 @@ datasource db {
 }
 
 model User {
-  tg_id    Int      @id
-  token    String
-  students Student?
-  tasks    Task[]
+  tgId          Int          @id @map("tg_id")
+
+  token         String
+
+  student       Student?
+  tasks         Task[]
+
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Student {
-  id              Int    @id @default(autoincrement())
-  course          Int
-  department      String
-  full_name       String
-  groupName       String
-  record_book_id  Int
-  semester        Int
-  study_direction String
-  study_profile   String
-  year            String
-  userId          Int    @unique
-  groupId         Int?
-  group           Group? @relation(fields: [groupId], references: [id])
-  user            User   @relation(fields: [userId], references: [tg_id])
+  id               Int            @id @default(autoincrement())
+
+  course           Int
+  department       String
+
+  fullName         String         @map("full_name")
+  groupName        String         @map("group_name")
+
+  recordBookId     Int            @map("record_book_id")
+
+  semester         Int
+
+  studyDirection   String         @map("study_direction")
+  studyProfile     String         @map("study_profile")
+
+  year             String
+
+  userId           Int            @unique @map("user_id")
+  groupId          Int?           @map("group_id")
+
+  user             User           @relation(fields: [userId], references: [tgId], onDelete: Cascade)
+
+  group            Group?         @relation(fields: [groupId], references: [id])
+
+  disciplines      Discipline[]
+
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
 
   @@map("students")
 }
 
-model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  deadline    DateTime
-  authorId    Int
-  state       String   @default("draft")
-  author      User     @relation(fields: [authorId], references: [tg_id])
-
-  @@map("tasks")
-}
-
 model Group {
-  id        Int        @id @default(autoincrement())
-  orioksId  Int?       @unique
-  name      String     @unique
-  schedules Schedule[]
-  students  Student[]
+  id               Int            @id @default(autoincrement())
+
+  orioksId         Int            @unique @map("orioks_id")
+
+  name             String
+
+  schedules        Schedule[]
+  students         Student[]
+
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
 
   @@map("groups")
 }
 
-model Schedule {
-  id        Int      @id @default(autoincrement())
-  groupId   Int
-  semester  String
-  week      Int
-  weekType  Int
-  dayOfWeek Day
-  lessons   Lesson[]
-  group     Group    @relation(fields: [groupId], references: [id])
+model SemesterInfo {
+  id                  Int         @id @default(autoincrement())
 
-  @@unique([groupId, week, dayOfWeek])
+  semesterStart       DateTime    @map("semester_start")
+
+  sessionStart        DateTime?   @map("session_start")
+  sessionEnd          DateTime?   @map("session_end")
+
+  nextSemesterStart   DateTime?   @map("next_semester_start")
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("semester_info")
+}
+
+model Timetable {
+  lessonNumber        Int         @id @map("lesson_number")
+
+  startTime           String      @map("start_time")
+  endTime             String      @map("end_time")
+
+  @@map("timetable")
+}
+
+model Schedule {
+  id                  Int         @id @default(autoincrement())
+
+  groupId             Int         @map("group_id")
+
+  semesterLabel       String      @map("semester_label")
+
+  weekVariant         Int         @map("week_variant")
+
+  dayOfWeek           Day         @map("day_of_week")
+
+  lastUpdated         DateTime    @map("last_updated")
+
+  group               Group       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  lessons             Lesson[]
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@unique([groupId, weekVariant, dayOfWeek])
+
   @@map("schedules")
 }
 
 model Lesson {
-  id            Int      @id @default(autoincrement())
-  lesson_number Int
-  lesson_name   String
-  lesson_type   String
-  teacher       String
-  classroom     String
-  scheduleId    Int
-  schedule      Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  id                  Int         @id @default(autoincrement())
 
-  @@unique([scheduleId, lesson_number])
+  lessonNumber        Int         @map("lesson_number")
+
+  lessonName          String      @map("lesson_name")
+  lessonType          String      @map("lesson_type")
+
+  teacher             String
+
+  teacherInitials     String?     @map("teacher_initials")
+
+  classroom           String
+
+  scheduleId          Int         @map("schedule_id")
+
+  schedule            Schedule    @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@unique([scheduleId, lessonNumber])
+
   @@map("lessons")
 }
 
+model Discipline {
+  id                  Int         @id @default(autoincrement())
+
+  orioksId            Int         @unique @map("orioks_id")
+
+  name                String
+  department          String
+
+  controlForm         String?     @map("control_form")
+
+  currentGrade        Float?      @map("current_grade")
+  maxGrade            Float       @map("max_grade")
+
+  examDate            DateTime?   @map("exam_date")
+
+  teachers            String[]
+
+  studentId           Int         @map("student_id")
+
+  student             Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  events              Event[]
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("disciplines")
+}
+
+model Event {
+  id                  Int         @id @default(autoincrement())
+
+  alias               String?
+
+  currentGrade        Float?      @map("current_grade")
+  maxGrade            Float       @map("max_grade")
+
+  name                String?
+
+  type                String
+
+  week                Int
+
+  disciplineId        Int         @map("discipline_id")
+
+  discipline          Discipline  @relation(fields: [disciplineId], references: [id], onDelete: Cascade)
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("events")
+}
+
+model Task {
+  id                  Int         @id @default(autoincrement())
+
+  title               String
+  description         String
+
+  deadline            DateTime?
+
+  state               TaskState   @default(draft)
+
+  authorId            Int         @map("author_id")
+
+  author              User        @relation(fields: [authorId], references: [tgId], onDelete: Cascade)
+
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("tasks")
+}
+
+enum TaskState {
+  draft
+  completed
+}
+
 enum Day {
-  Monday
-  Tuesday
-  Wednesday
-  Thursday
-  Friday
-  Saturday
-  Sunday
+  monday
+  tuesday
+  wednesday
+  thursday
+  friday
+  saturday
+  sunday
 }

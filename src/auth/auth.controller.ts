@@ -3,10 +3,6 @@ import { AuthRequestSchema } from "../config/schemas";
 import userService from "./auth.repository";
 import authService from "./auth.service";
 
-class AuthController {
-
-}
-
 export const auth = async (req: Request, res: Response) => {
     try {
         const { login, password, tgId } = req.body;
